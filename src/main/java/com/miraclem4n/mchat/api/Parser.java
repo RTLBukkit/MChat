@@ -15,6 +15,8 @@ import com.miraclem4n.mchat.types.InfoType;
 import com.miraclem4n.mchat.types.config.ConfigType;
 import com.miraclem4n.mchat.types.config.LocaleType;
 import com.miraclem4n.mchat.util.MessageUtil;
+import com.miraclem4n.mchat.variables.Result;
+import com.miraclem4n.mchat.variables.vgHeroes;
 import com.palmergames.bukkit.towny.TownyFormatter;
 import com.palmergames.bukkit.towny.object.Nation;
 import com.palmergames.bukkit.towny.object.Resident;
@@ -26,6 +28,7 @@ import uk.org.whoami.geoip.GeoIPLookup;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -172,47 +175,6 @@ public class Parser {
                 gCity = location.city;
             }
 
-            // Initialize Heroes Vars
-            if (heroesB) {
-                Hero hero = heroes.getCharacterManager().getHero(player);
-                HeroClass heroClass = hero.getHeroClass();
-                HeroClass heroSClass = hero.getSecondClass();
-
-                int hL = hero.getLevel();
-                int hSL = hero.getLevel(heroSClass);
-                double hE = hero.getExperience(heroClass);
-                double hSE = hero.getExperience(heroSClass);
-
-                hClass = hero.getHeroClass().getName();
-                hHealth = String.valueOf(hero.getPlayer().getHealth());
-                hHBar = Messaging.createHealthBar(hero.getPlayer().getHealth(), hero.getPlayer().getMaxHealth());
-                hMana = String.valueOf(hero.getMana());
-                hLevel = String.valueOf(hL);
-                hExp = String.valueOf(hE);
-                hEBar = Messaging.createExperienceBar(hero, heroClass);
-
-                Integer hMMana = hero.getMaxMana();
-
-                if (hMMana != null) {
-                    hMBar = Messaging.createManaBar(hero.getMana(), hero.getMaxMana());
-                }
-
-                if (hero.getParty() != null) {
-                    hParty = hero.getParty().toString();
-                }
-
-                if (heroSClass != null) {
-                    hSClass = heroSClass.getName();
-                    hSLevel = String.valueOf(hSL);
-                    hSExp = String.valueOf(hSE);
-                    hSEBar = Messaging.createExperienceBar(hero, heroSClass);
-                }
-
-
-                hMastered = hero.isMaster(heroClass) && (heroSClass == null || hero.isMaster(heroSClass))
-                        ? LocaleType.MESSAGE_HEROES_TRUE.getVal() : LocaleType.MESSAGE_HEROES_FALSE.getVal();
-            }
-
             if (townyB) {
                 try {
                     Resident resident = TownyUniverse.getDataSource().getResident(pName);
@@ -272,7 +234,9 @@ public class Parser {
         TreeMap<String, Object> fVarMap = new TreeMap<String, Object>();
         TreeMap<String, Object> rVarMap = new TreeMap<String, Object>();
         TreeMap<String, Object> lVarMap = new TreeMap<String, Object>();
-
+        TreeMap<String, Result> newVarMap = new TreeMap<String, Result>();
+        new vgHeroes().register(newVarMap);
+        
         addVar(fVarMap, vI + "mnameformat," + vI + "mnf", LocaleType.FORMAT_NAME.getVal());
         addVar(fVarMap, vI + "healthbar," + vI + "hb", healthBar);
 
@@ -347,6 +311,7 @@ public class Parser {
         formatAll = replaceVars(formatAll, fVarMap.descendingMap(), true);
         formatAll = replaceVars(formatAll, rVarMap.descendingMap(), true);
         formatAll = replaceVars(formatAll, lVarMap.descendingMap(), false);
+        formatAll = replaceVars(formatAll, newVarMap);
 
         return formatAll;
     }
@@ -475,6 +440,16 @@ public class Parser {
             if (doColour) {
                 value = MessageUtil.addColour(value);
             }
+
+            format = format.replace(entry.getKey(), value);
+        }
+
+        return format;
+    }
+    
+    private static String replaceVars(String format, Map<String, Result> map) {
+        for (Entry<String, Result> entry : map.entrySet()) {
+            String value = entry.getValue().toString();
 
             format = format.replace(entry.getKey(), value);
         }
