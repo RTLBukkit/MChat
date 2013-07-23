@@ -8,8 +8,8 @@ import com.miraclem4n.mchat.types.config.LocaleType;
 import com.miraclem4n.mchat.util.MessageUtil;
 import com.platymuus.bukkit.permissions.Group;
 import com.platymuus.bukkit.permissions.PermissionsPlugin;
-import de.bananaco.bpermissions.api.ApiLayer;
-import de.bananaco.bpermissions.api.util.CalculableType;
+//import de.bananaco.bpermissions.api.ApiLayer;
+//import de.bananaco.bpermissions.api.util.CalculableType;
 import net.krinsoft.privileges.Privileges;
 import org.anjocaido.groupmanager.dataholder.OverloadedWorldHolder;
 import org.bukkit.Bukkit;
@@ -62,9 +62,9 @@ public class Reader {
             return getPEXInfo(name, type, world, info);
         }
 
-        if (API.bPermB) {
-            return getbPermInfo(name, type, world, info);
-        }
+       // if (API.bPermB) {
+        //    return getbPermInfo(name, type, world, info);
+        //}
 
         if (API.vChatB) {
             return getVaultInfo(name, type, world, info);
@@ -457,9 +457,9 @@ public class Reader {
         return group;
     }
 
-    /*
+    /**
      * bPermissions Stuff
-     */
+     
     private static Object getbPermInfo(String name, InfoType type, String world, String info) {
         if (info.equals("group") || info.equals("groups")) {
             return getbPermGroup(name, world, info);
@@ -492,7 +492,7 @@ public class Reader {
         return group;
     }
 
-
+*/
     /*
      * Vault Stuff
      */
