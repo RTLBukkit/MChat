@@ -17,7 +17,7 @@ public class LocaleYml extends Yml {
         checkOption("format.chat", "+p+dn+s&f: +m");
         checkOption("format.date", "HH:mm:ss");
         checkOption("format.name", "+p+dn+s&e");
-        checkOption("format.tabbedList", "+p+dn+s");
+        checkOption("format.tabbedList", "+n");
         checkOption("format.listCmd", "+p+dn+s");
         checkOption("format.me", "* +p+dn+s&e +m");
 
